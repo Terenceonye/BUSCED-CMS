@@ -51,6 +51,7 @@ node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 | `PORT` | `3000` | port Express binds to |
 | `JWT_EXPIRES_IN` | – | e.g. `15d` |
 | `UPLOAD_PATH` | `uploads/` | extra static mount for `/uploads` |
+| `CORS_ORIGINS` | – | comma-separated origins allowed to call the API cross-site. Unset allows any origin. The dashboard is same-origin and never needs this |
 
 ### Email (password reset OTP)
 
@@ -68,8 +69,9 @@ Without these, sign-in still works but **password reset emails will fail**.
 
 ## 3. Build and run
 
-`public/app` is a build artifact and is **gitignored**, so the server must be
-built after every deploy or the dashboard will 404.
+`public/app` is a build artifact that **is committed**, so a host only needs to
+install server dependencies and start. Rebuild it locally whenever anything in
+`client/src` changes, or the deployed dashboard silently stays stale.
 
 ```bash
 git clone <repo> && cd "BUSCED CMS"
@@ -184,9 +186,9 @@ so Express sees the real protocol and client IP.
 - [ ] Set `JWT_SECRET` and `SESSION_SECRET` to fresh random values.
 - [ ] Confirm `.env` is not committed.
 - [ ] Restrict MongoDB network access to the app server.
-- [ ] Tighten CORS — `server.js` currently uses `app.use(cors())`, which allows
-      every origin. If only this dashboard calls the API, scope it:
-      `app.use(cors({ origin: "https://cms.example.com", credentials: true }))`.
+- [ ] Tighten CORS — set `CORS_ORIGINS` to the public site(s) that call the API,
+      e.g. `CORS_ORIGINS=https://busced.edu.ng,https://www.busced.edu.ng`.
+      Left unset, `server.js` reflects any origin.
 - [ ] Take a database backup schedule.
 
 ---

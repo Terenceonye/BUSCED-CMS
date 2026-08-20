@@ -69,7 +69,7 @@ exports.forgotPassword = async (req, res) => {
     const settings = await Settings.getSettings();
     const brand = settings.siteTitle;
 
-    await sendEmail(
+    sendEmail(
       email,
       "Your OTP Code",
       `
@@ -154,7 +154,9 @@ exports.changePassword = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     const matches = await user.comparePassword(currentPassword);

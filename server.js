@@ -31,8 +31,28 @@ app.use(
 
 // Middleware
 
-//ALLOW THE MAIN DOMAIN TO PASS CORS
-app.use(cors());
+// The React CMS is same-origin (Express serves public/app below), so CORS only
+// matters for the public site calling /api/v1. A "*" origin cannot be combined
+// with credentials, so reflect allowed origins from CORS_ORIGINS instead
+// (comma-separated). Unset means allow any origin.
+const allowedOrigins = (process.env.CORS_ORIGINS || "*")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Same-origin requests, curl and server-to-server calls send no Origin.
+      if (!origin) return callback(null, true);
+      if (!allowedOrigins.length || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error(`Blocked by CORS: ${origin}`));
+    },
+    credentials: true,
+  }),
+);
 // app.use(morgan("dev"));
 app.use(express.json());
 app.use("/uploads", express.static(process.env.UPLOAD_PATH || "uploads"));
