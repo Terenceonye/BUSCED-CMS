@@ -1,0 +1,10 @@
+node_modules/
+.env
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Uploaded content
+public/uploads/
+uploadedNewsImages/
+config/uploads/
