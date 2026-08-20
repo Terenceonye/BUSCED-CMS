@@ -48,7 +48,10 @@ app.use(
       if (!allowedOrigins.length || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      callback(new Error(`Blocked by CORS: ${origin}`));
+      // Not allowlisted: drop the CORS headers and let the browser block the
+      // response. Erroring here would also 500 the dashboard's own writes,
+      // since same-origin POST/PUT/DELETE carry an Origin header too.
+      callback(null, false);
     },
     credentials: true,
   }),

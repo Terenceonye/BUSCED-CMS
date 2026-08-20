@@ -27,7 +27,7 @@ const programSchema = new mongoose.Schema(
     level: [
       {
         type: String,
-        enum: ["ND", "HND"],
+        enum: ["ND", "HND", "BSc", "MSc", "PhD"],
         required: true,
       },
     ],
@@ -46,7 +46,7 @@ const programSchema = new mongoose.Schema(
       originalName: String,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Program", programSchema);
