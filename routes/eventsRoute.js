@@ -79,7 +79,7 @@ router.get("/api/events", protect, async (req, res) => {
 
     const total = await Event.countDocuments();
 
-    res.json({ events, total });
+    res.json({ events, total, limit: parseInt(limit), page: parseInt(page) });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch events." });
@@ -113,7 +113,13 @@ router.get("/api/v1/events", async (req, res) => {
 
     const total = await Event.countDocuments({ date: { $gte: today } });
 
-    res.json({ success: true, events, total });
+    res.json({
+      success: true,
+      events,
+      total,
+      limit: parseInt(limit),
+      page: parseInt(page),
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({
