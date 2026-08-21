@@ -12,7 +12,7 @@ export default function FacultiesPage() {
     <CrudPage<Faculty>
       title="Faculties"
       description="Schools and faculties that departments belong to."
-      endpoint="/api/schools"
+      endpoint="/api/v1/schools"
       singular="Faculty"
       fields={[
         {

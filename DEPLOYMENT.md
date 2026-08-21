@@ -6,7 +6,7 @@ process and one port to deploy.
 
 ```
 Express (server.js)
-├── /api/**            JSON API
+├── /api/v1/**         JSON API (older /api/... paths are rewritten onto it)
 ├── /uploads/**        uploaded gallery, hero and branding images
 ├── /uploadedNewsImages/**  uploaded news images
 ├── /branding/**       default logo + favicon

@@ -28,7 +28,7 @@ export interface ManagedImage {
 interface Props {
   title: string;
   description: string;
-  /** Paginated list endpoint, e.g. /api/gallery */
+  /** Paginated list endpoint, e.g. /api/v1/gallery */
   listUrl: string;
   /** Multipart POST endpoint taking `image` + `altText` */
   uploadUrl: string;

@@ -16,7 +16,7 @@ export default function DepartmentsPage() {
     <CrudPage<Department>
       title="Departments"
       description="Departments and the faculty each one belongs to."
-      endpoint="/api/departments"
+      endpoint="/api/v1/departments"
       singular="Department"
       fields={[
         {
@@ -31,7 +31,7 @@ export default function DepartmentsPage() {
           label: "Faculty",
           type: "select",
           required: true,
-          optionsUrl: "/api/schools",
+          optionsUrl: "/api/v1/schools",
           optionLabel: (o) => o.name,
           placeholder: "Select a faculty",
         },

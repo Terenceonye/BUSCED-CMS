@@ -4,6 +4,16 @@ const fs = require("fs");
 
 const xlsx = require("xlsx");
 
+// Records created before `timestamps` was enabled have no createdAt, and Mongo
+// sorts every missing value equally. The _id tiebreaker keeps the order total,
+// which paging needs: without it skip/limit can repeat or drop a record.
+const STAFF_SORT = { createdAt: -1, _id: -1 };
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 100;
+
+// The search term goes into a RegExp, so treat it as text rather than a pattern.
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 //Function to generate a unique ID number for staff in the form 1000-UISTO-1247-613X
 // const generateIdNumber = async () => {
 //   const prefix = "1000-UISTO-";
@@ -75,13 +85,13 @@ exports.createStaff = async (req, res) => {
 // GET all staff, a single staff via ?id=staffId, or department staff via ?id=departmentId&onlystaff=true
 exports.getStaff = async (req, res) => {
   try {
-    const { id, onlystaff } = req.query;
+    const { id, onlystaff, page, limit, q } = req.query;
 
     // Case: Fetch only limited staff info by department
     if (onlystaff === "true" && id) {
       const staffList = await Staff.find({ department: { $in: [id] } })
         .select("fullName email position specialization profileImage about")
-        .sort({ createdAt: -1 });
+        .sort(STAFF_SORT);
 
       return res.json({ success: true, data: staffList });
     }
@@ -103,14 +113,47 @@ exports.getStaff = async (req, res) => {
       return res.json({ success: true, staff });
     }
 
-    // Case: Fetch all staff
-    const allStaff = await Staff.find()
+    // Case: Fetch all staff.
+    // `q` matches the fields the dashboard used to filter in the browser, so
+    // searching still covers every record rather than only the page on screen.
+    const filter = {};
+    if (q && q.trim()) {
+      const term = new RegExp(escapeRegex(q.trim()), "i");
+      filter.$or = [{ fullName: term }, { email: term }, { position: term }];
+    }
+
+    const query = Staff.find(filter)
       .populate("faculty")
       .populate("department")
       .populate("program")
-      .sort({ createdAt: -1 });
+      .sort(STAFF_SORT);
 
-    res.json({ success: true, staff: allStaff });
+    // Without `page` the full list is returned, so the public site and any
+    // other existing caller keeps working exactly as before.
+    if (page === undefined) {
+      const allStaff = await query;
+      return res.json({ success: true, staff: allStaff });
+    }
+
+    const currentPage = Math.max(1, parseInt(page, 10) || 1);
+    const perPage = Math.min(
+      MAX_PAGE_SIZE,
+      Math.max(1, parseInt(limit, 10) || DEFAULT_PAGE_SIZE),
+    );
+
+    const [staff, total] = await Promise.all([
+      query.skip((currentPage - 1) * perPage).limit(perPage),
+      Staff.countDocuments(filter),
+    ]);
+
+    res.json({
+      success: true,
+      staff,
+      total,
+      page: currentPage,
+      pages: Math.max(1, Math.ceil(total / perPage)),
+      limit: perPage,
+    });
   } catch (err) {
     console.error("Get Staff Error:", err);
     res.status(500).json({

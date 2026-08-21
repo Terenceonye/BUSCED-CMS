@@ -6,7 +6,7 @@ const { protect } = require("../middlewares/authMiddleware");
 // Event screens are rendered by the React CMS; this router is API only.
 
 // Add event
-router.post("/api/events", protect, async (req, res) => {
+router.post("/admin/events", protect, async (req, res) => {
   try {
     const { title, description, date, startTime, endTime, location } = req.body;
     const event = new Event({
@@ -25,7 +25,7 @@ router.post("/api/events", protect, async (req, res) => {
 });
 
 // Update event
-router.put("/api/events/:id", protect, async (req, res) => {
+router.put("/admin/events/:id", protect, async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, date, startTime, endTime, location } = req.body;
@@ -47,7 +47,7 @@ router.put("/api/events/:id", protect, async (req, res) => {
 });
 
 // Delete event
-router.delete("/api/events/:id", protect, async (req, res) => {
+router.delete("/admin/events/:id", protect, async (req, res) => {
   try {
     const deleted = await Event.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: "Event not found" });
@@ -59,7 +59,7 @@ router.delete("/api/events/:id", protect, async (req, res) => {
 
 // Get all events or single by ?id=
 // GET all events with pagination or a single event by ?id=
-router.get("/api/events", protect, async (req, res) => {
+router.get("/admin/events", protect, async (req, res) => {
   try {
     const { id, page = 1, limit = 6 } = req.query;
 
@@ -89,7 +89,7 @@ router.get("/api/events", protect, async (req, res) => {
 //=====================================================================
 //Public API to get all events
 //=====================================================================
-router.get("/api/v1/events", async (req, res) => {
+router.get("/events", async (req, res) => {
   try {
     const { id, page = 1, limit = 6 } = req.query;
 

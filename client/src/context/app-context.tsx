@@ -97,7 +97,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const refresh = React.useCallback(async () => {
     try {
       const res = await get<{ success: boolean; data: SiteSettings }>(
-        "/api/settings",
+        "/api/v1/settings",
       );
       if (res?.data) setSettings(res.data);
     } catch {
@@ -171,7 +171,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       try {
         const res = await get<{ success: boolean; user: AuthUser }>(
-          "/api/auth/verify",
+          "/api/v1/auth/verify",
         );
         if (!cancelled && res?.user) {
           setUser(res.user);
@@ -201,7 +201,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = React.useCallback(async (email: string, password: string) => {
     const res = await post<{ success: boolean; token: string; user: AuthUser }>(
-      "/api/auth/login",
+      "/api/v1/auth/login",
       { email, password },
       { allowUnauthorized: true },
     );

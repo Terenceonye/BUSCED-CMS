@@ -1,0 +1,2004 @@
+{
+  "info": {
+    "name": "BUSCED CMS - Public API (v1)",
+    "_postman_id": "b05ced00-0000-4000-8000-000000000001",
+    "description": "Public, unauthenticated endpoints of the BUSCED CMS.\n\nEvery endpoint lives under `/api/v1/`. Older paths such as `/api/staff` are rewritten onto these and still work, but should be treated as deprecated.\n\nSet the `baseUrl` variable to your server, with no trailing slash.\n\n**The saved examples are real responses**, captured by calling a running server against the live database. Document ids in the examples are real and will differ on your instance.\n\nEndpoints NOT in this collection require a Bearer token: everything under `/api/v1/admin/` and `/api/v1/auth/`, plus `/api/v1/faqs`, `/api/v1/context`, `/api/v1/program-types`, `/api/v1/dashboard-summary`, and every write operation on the resources listed here.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Academic structure",
+      "item": [
+        {
+          "name": "GET /api/v1/schools",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/schools",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "schools"
+              ]
+            },
+            "description": "List schools (faculties), or one by `id`.\n\n**Query**\n- `id` - return a single school instead of the list.\n\nThe payload omits `createdAt`, `updatedAt` and `__v`."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/schools",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "schools"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Faculties fetched successfully\",\n  \"data\": [\n    {\n      \"_id\": \"6a86271c9a4264c65ae3b923\",\n      \"name\": \"ENgineering\",\n      \"description\": \"big Fish must be enough for you\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - single",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/schools?id=6a86271c9a4264c65ae3b923",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "schools"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "6a86271c9a4264c65ae3b923"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Faculty fetched successfully\",\n  \"data\": {\n    \"_id\": \"6a86271c9a4264c65ae3b923\",\n    \"name\": \"ENgineering\",\n    \"description\": \"big Fish must be enough for you\"\n  }\n}"
+            },
+            {
+              "name": "404 - not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/schools?id=000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "schools"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Faculty not found\"\n}"
+            },
+            {
+              "name": "500 - malformed id",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/schools?id=not-an-id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "schools"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "not-an-id"
+                    }
+                  ]
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Failed to fetch faculty(s)\",\n  \"error\": \"Cast to ObjectId failed for value \\\"not-an-id\\\" (type string) at path \\\"_id\\\" for model \\\"Faculty\\\"\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/departments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/departments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "departments"
+              ]
+            },
+            "description": "List departments, or one by `id`.\n\n**Query**\n- `id` - return a single department.\n- `schoolId` - only departments belonging to that school.\n\nEach department has its parent `faculty` populated."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/departments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "departments"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Departments fetched successfully\",\n  \"data\": [\n    {\n      \"_id\": \"6a86275b9a4264c65ae3b92a\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"name\": \"Sciences dept\",\n      \"structure\": \"sdfds department must be enought too\",\n      \"mission\": \"department mission\",\n      \"researchFocus\": [\n        \"reseach focus\",\n        \"me and research\",\n        \"big fish\"\n      ],\n      \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n      \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - single",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/departments?id=6a86275b9a4264c65ae3b92a",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "departments"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "6a86275b9a4264c65ae3b92a"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Single department fetched successfully\",\n  \"data\": {\n    \"_id\": \"6a86275b9a4264c65ae3b92a\",\n    \"faculty\": {\n      \"_id\": \"6a86271c9a4264c65ae3b923\",\n      \"name\": \"ENgineering\",\n      \"description\": \"big Fish must be enough for you\",\n      \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n      \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n      \"__v\": 0\n    },\n    \"name\": \"Sciences dept\",\n    \"structure\": \"sdfds department must be enought too\",\n    \"mission\": \"department mission\",\n    \"researchFocus\": [\n      \"reseach focus\",\n      \"me and research\",\n      \"big fish\"\n    ]\n  }\n}"
+            },
+            {
+              "name": "200 - by school",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/departments?schoolId=6a86271c9a4264c65ae3b923",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "departments"
+                  ],
+                  "query": [
+                    {
+                      "key": "schoolId",
+                      "value": "6a86271c9a4264c65ae3b923"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Departments fetched successfully\",\n  \"data\": [\n    {\n      \"_id\": \"6a86275b9a4264c65ae3b92a\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"name\": \"Sciences dept\",\n      \"structure\": \"sdfds department must be enought too\",\n      \"mission\": \"department mission\",\n      \"researchFocus\": [\n        \"reseach focus\",\n        \"me and research\",\n        \"big fish\"\n      ],\n      \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n      \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            },
+            {
+              "name": "404 - not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/departments?id=000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "departments"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Department not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/programs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/programs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "programs"
+              ]
+            },
+            "description": "List programmes, or one by `id`.\n\n**Query**\n- `id` - return a single programme.\n- `limit` - return that many programmes chosen **at random** (via `$sample`), not the first N.\n\nWithout `limit` the full list is returned, newest first. `faculty`, `department` and `programType` are populated."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/programs",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "programs"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"programs\": [\n    {\n      \"programImage\": {\n        \"filename\": \"1787176935168-319590630.png\",\n        \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n        \"originalName\": \"image (13).png\"\n      },\n      \"_id\": \"6a8627e79a4264c65ae3b956\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"programType\": [\n        {\n          \"_id\": \"6a86277a9a4264c65ae3b931\",\n          \"programTypeName\": \"Undergraduate\",\n          \"createdAt\": \"2026-08-19T22:00:26.371Z\",\n          \"updatedAt\": \"2026-08-19T22:00:26.371Z\",\n          \"__v\": 0\n        }\n      ],\n      \"name\": \"Program name\",\n      \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n      \"level\": [\n        \"ND\"\n      ],\n      \"requiredCredit\": 130,\n      \"duration\": \"3\",\n      \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n      \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n      \"__v\": 0\n    },\n    {\n      \"programImage\": {\n        \"filename\": \"1787176893497-652384720.png\",\n        \"url\": \"/uploads/programImages/1787176893497-652384720.png\",\n        \"originalName\": \"image (15).png\"\n      },\n      \"_id\": \"6a8627bd9a4264c65ae3b93e\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"programType\": [\n        {\n          \"_id\": \"6a86277a9a4264c65ae3b931\",\n          \"programTypeName\": \"Undergraduate\",\n          \"createdAt\": \"2026-08-19T22:00:26.371Z\",\n          \"updatedAt\": \"2026-08-19T22:00:26.371Z\",\n          \"__v\": 0\n        }\n      ],\n      \"name\": \"Program name\",\n      \"description\": \"csdfsfsadfsdfsdfsdfds\",\n      \"level\": [\n        \"HND\"\n      ],\n      \"requiredCredit\": 120,\n      \"duration\": \"3\",\n      \"createdAt\": \"2026-08-19T22:01:33.524Z\",\n      \"updatedAt\": \"2026-08-19T22:01:33.524Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - single",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/programs?id=6a8627e79a4264c65ae3b956",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "programs"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "6a8627e79a4264c65ae3b956"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"program\": {\n    \"programImage\": {\n      \"filename\": \"1787176935168-319590630.png\",\n      \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n      \"originalName\": \"image (13).png\"\n    },\n    \"_id\": \"6a8627e79a4264c65ae3b956\",\n    \"faculty\": {\n      \"_id\": \"6a86271c9a4264c65ae3b923\",\n      \"name\": \"ENgineering\",\n      \"description\": \"big Fish must be enough for you\",\n      \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n      \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n      \"__v\": 0\n    },\n    \"department\": [\n      {\n        \"_id\": \"6a86275b9a4264c65ae3b92a\",\n        \"faculty\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"Sciences dept\",\n        \"structure\": \"sdfds department must be enought too\",\n        \"mission\": \"department mission\",\n        \"researchFocus\": [\n          \"reseach focus\",\n          \"me and research\",\n          \"big fish\"\n        ],\n        \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n        \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n        \"__v\": 0\n      }\n    ],\n    \"programType\": [\n      {\n        \"_id\": \"6a86277a9a4264c65ae3b931\",\n        \"programTypeName\": \"Undergraduate\",\n        \"createdAt\": \"2026-08-19T22:00:26.371Z\",\n        \"updatedAt\": \"2026-08-19T22:00:26.371Z\",\n        \"__v\": 0\n      }\n    ],\n    \"name\": \"Program name\",\n    \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n    \"level\": [\n      \"ND\"\n    ],\n    \"requiredCredit\": 130,\n    \"duration\": \"3\",\n    \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n    \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "200 - random sample",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/programs?limit=2",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "programs"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "2"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"programs\": [\n    {\n      \"_id\": \"6a8627bd9a4264c65ae3b93e\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"programType\": [\n        {\n          \"_id\": \"6a86277a9a4264c65ae3b931\",\n          \"programTypeName\": \"Undergraduate\",\n          \"createdAt\": \"2026-08-19T22:00:26.371Z\",\n          \"updatedAt\": \"2026-08-19T22:00:26.371Z\",\n          \"__v\": 0\n        }\n      ],\n      \"name\": \"Program name\",\n      \"description\": \"csdfsfsadfsdfsdfsdfds\",\n      \"level\": [\n        \"HND\"\n      ],\n      \"requiredCredit\": 120,\n      \"duration\": \"3\",\n      \"programImage\": {\n        \"filename\": \"1787176893497-652384720.png\",\n        \"url\": \"/uploads/programImages/1787176893497-652384720.png\",\n        \"originalName\": \"image (15).png\"\n      },\n      \"createdAt\": \"2026-08-19T22:01:33.524Z\",\n      \"updatedAt\": \"2026-08-19T22:01:33.524Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a8627e79a4264c65ae3b956\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"programType\": [\n        {\n          \"_id\": \"6a86277a9a4264c65ae3b931\",\n          \"programTypeName\": \"Undergraduate\",\n          \"createdAt\": \"2026-08-19T22:00:26.371Z\",\n          \"updatedAt\": \"2026-08-19T22:00:26.371Z\",\n          \"__v\": 0\n        }\n      ],\n      \"name\": \"Program name\",\n      \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n      \"level\": [\n        \"ND\"\n      ],\n      \"requiredCredit\": 130,\n      \"duration\": \"3\",\n      \"programImage\": {\n        \"filename\": \"1787176935168-319590630.png\",\n        \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n        \"originalName\": \"image (13).png\"\n      },\n      \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n      \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n      \"__v\": 0\n    }\n  ]\n}"
+            },
+            {
+              "name": "404 - not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/programs?id=000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "programs"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Program not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Staff",
+      "item": [
+        {
+          "name": "GET /api/v1/staff",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/staff",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "staff"
+              ]
+            },
+            "description": "List staff, one by `id`, or a slim list for a single department.\n\n**Query**\n- `id` - return one staff member, fully populated.\n- `page` - enable pagination. **Without `page` the entire list is returned** in the older `{ success, staff }` envelope, with no counts.\n- `limit` - page size. Default 20, maximum 100.\n- `q` - case-insensitive match on `fullName`, `email` or `position`.\n- `onlystaff=true` **together with** `id` - staff of that **department**, with a reduced field set, returned under `data` instead of `staff`.\n\nSorted newest first (`createdAt`, then `_id` as tie-breaker)."
+          },
+          "response": [
+            {
+              "name": "200 - list (unpaginated)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"staff\": [\n    {\n      \"profileImage\": {\n        \"filename\": \"1787328929221-58251590.jpeg\",\n        \"url\": \"/uploads/profileImages/1787328929221-58251590.jpeg\",\n        \"originalName\": \"WhatsApp Image 2026-07-14 at 06.40.08.jpeg\"\n      },\n      \"externalLinks\": {\n        \"googleScholar\": \"https://google.com\",\n        \"researchGate\": \"https://gate.com\",\n        \"collaborationNetwork\": \"https://network.com\"\n      },\n      \"about\": {\n        \"bio\": \"This is my brief Biography for today\",\n        \"degrees\": [\n          \"BEng - Computer Engineering\",\n          \"MSc - Computer affairs\"\n        ]\n      },\n      \"research\": {\n        \"interests\": [\n          \"Quantum Energy\",\n          \"Cyber Bulletting\"\n        ],\n        \"grants\": [\n          {\n            \"title\": \"Mobile Police\",\n            \"date\": \"2026-08-05T00:00:00.000Z\",\n            \"tag\": \"mobile, police, grant\",\n            \"description\": \"Mobile police grant to police the internet like VDM\"\n          },\n          {\n            \"title\": \"Ring Offense\",\n            \"date\": \"2026-08-06T00:00:00.000Z\",\n            \"tag\": \"defence, maturity\",\n            \"description\": \"Defiensive maturity is the key\"\n          }\n        ]\n      },\n      \"_id\": \"6a887990649c6f16d1ab6d81\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"program\": [\n        {\n          \"programImage\": {\n            \"filename\": \"1787176935168-319590630.png\",\n            \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n            \"originalName\": \"image (13).png\"\n          },\n          \"_id\": \"6a8627e79a4264c65ae3b956\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"department\": [\n            \"6a86275b9a4264c65ae3b92a\"\n          ],\n          \"programType\": [\n            \"6a86277a9a4264c65ae3b931\"\n          ],\n          \"name\": \"Program name\",\n          \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n          \"level\": [\n            \"ND\"\n          ],\n          \"requiredCredit\": 130,\n          \"duration\": \"3\",\n          \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n          \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n          \"__v\": 0\n        }\n      ],\n      \"fullName\": \"John Terence Onye\",\n      \"title\": \"Mr\",\n      \"position\": \"Senior Lecturer\",\n      \"specialization\": [\n        \"Machine Learning\",\n        \"RALX Africa\"\n      ],\n      \"phone\": \"+2349066063064\",\n      \"email\": \"onyeweketerence@gmail.com\",\n      \"affiliation\": \"JohnChi University\",\n      \"researchOutputs\": [\n        {\n          \"title\": \"Importance of Cancer to Computer sytems\",\n          \"date\": \"2026-07-29T00:00:00.000Z\",\n          \"collaborators\": [\n            \"Terence\",\n            \"MaryAnn\"\n          ],\n          \"pdfUrl\": \"https://imp_cancer.com\",\n          \"viewLink\": \"\",\n          \"_id\": \"6a8879a3649c6f16d1ab6d8b\"\n        }\n      ],\n      \"professionalActivities\": [\n        {\n          \"type\": \"Tired comma\",\n          \"title\": \"Administrator of Tired Comma\",\n          \"date\": \"2026-08-05T00:00:00.000Z\",\n          \"description\": \"This proofs the mechanism of car evolution is not good at all\"\n        }\n      ],\n      \"teachingActivities\": [\n        {\n          \"tag\": \"make, do, beans\",\n          \"title\": \"Senior Lecturer\",\n          \"startDate\": \"2026-07-27T00:00:00.000Z\",\n          \"endDate\": \"2026-08-12T00:00:00.000Z\",\n          \"link\": \"https://terence.com\"\n        }\n      ],\n      \"__v\": 0\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - paginated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff?page=1&limit=20",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"staff\": [\n    {\n      \"profileImage\": {\n        \"filename\": \"1787328929221-58251590.jpeg\",\n        \"url\": \"/uploads/profileImages/1787328929221-58251590.jpeg\",\n        \"originalName\": \"WhatsApp Image 2026-07-14 at 06.40.08.jpeg\"\n      },\n      \"externalLinks\": {\n        \"googleScholar\": \"https://google.com\",\n        \"researchGate\": \"https://gate.com\",\n        \"collaborationNetwork\": \"https://network.com\"\n      },\n      \"about\": {\n        \"bio\": \"This is my brief Biography for today\",\n        \"degrees\": [\n          \"BEng - Computer Engineering\",\n          \"MSc - Computer affairs\"\n        ]\n      },\n      \"research\": {\n        \"interests\": [\n          \"Quantum Energy\",\n          \"Cyber Bulletting\"\n        ],\n        \"grants\": [\n          {\n            \"title\": \"Mobile Police\",\n            \"date\": \"2026-08-05T00:00:00.000Z\",\n            \"tag\": \"mobile, police, grant\",\n            \"description\": \"Mobile police grant to police the internet like VDM\"\n          },\n          {\n            \"title\": \"Ring Offense\",\n            \"date\": \"2026-08-06T00:00:00.000Z\",\n            \"tag\": \"defence, maturity\",\n            \"description\": \"Defiensive maturity is the key\"\n          }\n        ]\n      },\n      \"_id\": \"6a887990649c6f16d1ab6d81\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"program\": [\n        {\n          \"programImage\": {\n            \"filename\": \"1787176935168-319590630.png\",\n            \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n            \"originalName\": \"image (13).png\"\n          },\n          \"_id\": \"6a8627e79a4264c65ae3b956\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"department\": [\n            \"6a86275b9a4264c65ae3b92a\"\n          ],\n          \"programType\": [\n            \"6a86277a9a4264c65ae3b931\"\n          ],\n          \"name\": \"Program name\",\n          \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n          \"level\": [\n            \"ND\"\n          ],\n          \"requiredCredit\": 130,\n          \"duration\": \"3\",\n          \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n          \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n          \"__v\": 0\n        }\n      ],\n      \"fullName\": \"John Terence Onye\",\n      \"title\": \"Mr\",\n      \"position\": \"Senior Lecturer\",\n      \"specialization\": [\n        \"Machine Learning\",\n        \"RALX Africa\"\n      ],\n      \"phone\": \"+2349066063064\",\n      \"email\": \"onyeweketerence@gmail.com\",\n      \"affiliation\": \"JohnChi University\",\n      \"researchOutputs\": [\n        {\n          \"title\": \"Importance of Cancer to Computer sytems\",\n          \"date\": \"2026-07-29T00:00:00.000Z\",\n          \"collaborators\": [\n            \"Terence\",\n            \"MaryAnn\"\n          ],\n          \"pdfUrl\": \"https://imp_cancer.com\",\n          \"viewLink\": \"\",\n          \"_id\": \"6a8879a3649c6f16d1ab6d8b\"\n        }\n      ],\n      \"professionalActivities\": [\n        {\n          \"type\": \"Tired comma\",\n          \"title\": \"Administrator of Tired Comma\",\n          \"date\": \"2026-08-05T00:00:00.000Z\",\n          \"description\": \"This proofs the mechanism of car evolution is not good at all\"\n        }\n      ],\n      \"teachingActivities\": [\n        {\n          \"tag\": \"make, do, beans\",\n          \"title\": \"Senior Lecturer\",\n          \"startDate\": \"2026-07-27T00:00:00.000Z\",\n          \"endDate\": \"2026-08-12T00:00:00.000Z\",\n          \"link\": \"https://terence.com\"\n        }\n      ],\n      \"__v\": 0\n    }\n  ],\n  \"total\": 1,\n  \"page\": 1,\n  \"pages\": 1,\n  \"limit\": 20\n}"
+            },
+            {
+              "name": "200 - search",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff?page=1&limit=20&q=a",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "q",
+                      "value": "a"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"staff\": [\n    {\n      \"profileImage\": {\n        \"filename\": \"1787328929221-58251590.jpeg\",\n        \"url\": \"/uploads/profileImages/1787328929221-58251590.jpeg\",\n        \"originalName\": \"WhatsApp Image 2026-07-14 at 06.40.08.jpeg\"\n      },\n      \"externalLinks\": {\n        \"googleScholar\": \"https://google.com\",\n        \"researchGate\": \"https://gate.com\",\n        \"collaborationNetwork\": \"https://network.com\"\n      },\n      \"about\": {\n        \"bio\": \"This is my brief Biography for today\",\n        \"degrees\": [\n          \"BEng - Computer Engineering\",\n          \"MSc - Computer affairs\"\n        ]\n      },\n      \"research\": {\n        \"interests\": [\n          \"Quantum Energy\",\n          \"Cyber Bulletting\"\n        ],\n        \"grants\": [\n          {\n            \"title\": \"Mobile Police\",\n            \"date\": \"2026-08-05T00:00:00.000Z\",\n            \"tag\": \"mobile, police, grant\",\n            \"description\": \"Mobile police grant to police the internet like VDM\"\n          },\n          {\n            \"title\": \"Ring Offense\",\n            \"date\": \"2026-08-06T00:00:00.000Z\",\n            \"tag\": \"defence, maturity\",\n            \"description\": \"Defiensive maturity is the key\"\n          }\n        ]\n      },\n      \"_id\": \"6a887990649c6f16d1ab6d81\",\n      \"faculty\": {\n        \"_id\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"ENgineering\",\n        \"description\": \"big Fish must be enough for you\",\n        \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n        \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n        \"__v\": 0\n      },\n      \"department\": [\n        {\n          \"_id\": \"6a86275b9a4264c65ae3b92a\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"name\": \"Sciences dept\",\n          \"structure\": \"sdfds department must be enought too\",\n          \"mission\": \"department mission\",\n          \"researchFocus\": [\n            \"reseach focus\",\n            \"me and research\",\n            \"big fish\"\n          ],\n          \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n          \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n          \"__v\": 0\n        }\n      ],\n      \"program\": [\n        {\n          \"programImage\": {\n            \"filename\": \"1787176935168-319590630.png\",\n            \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n            \"originalName\": \"image (13).png\"\n          },\n          \"_id\": \"6a8627e79a4264c65ae3b956\",\n          \"faculty\": \"6a86271c9a4264c65ae3b923\",\n          \"department\": [\n            \"6a86275b9a4264c65ae3b92a\"\n          ],\n          \"programType\": [\n            \"6a86277a9a4264c65ae3b931\"\n          ],\n          \"name\": \"Program name\",\n          \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n          \"level\": [\n            \"ND\"\n          ],\n          \"requiredCredit\": 130,\n          \"duration\": \"3\",\n          \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n          \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n          \"__v\": 0\n        }\n      ],\n      \"fullName\": \"John Terence Onye\",\n      \"title\": \"Mr\",\n      \"position\": \"Senior Lecturer\",\n      \"specialization\": [\n        \"Machine Learning\",\n        \"RALX Africa\"\n      ],\n      \"phone\": \"+2349066063064\",\n      \"email\": \"onyeweketerence@gmail.com\",\n      \"affiliation\": \"JohnChi University\",\n      \"researchOutputs\": [\n        {\n          \"title\": \"Importance of Cancer to Computer sytems\",\n          \"date\": \"2026-07-29T00:00:00.000Z\",\n          \"collaborators\": [\n            \"Terence\",\n            \"MaryAnn\"\n          ],\n          \"pdfUrl\": \"https://imp_cancer.com\",\n          \"viewLink\": \"\",\n          \"_id\": \"6a8879a3649c6f16d1ab6d8b\"\n        }\n      ],\n      \"professionalActivities\": [\n        {\n          \"type\": \"Tired comma\",\n          \"title\": \"Administrator of Tired Comma\",\n          \"date\": \"2026-08-05T00:00:00.000Z\",\n          \"description\": \"This proofs the mechanism of car evolution is not good at all\"\n        }\n      ],\n      \"teachingActivities\": [\n        {\n          \"tag\": \"make, do, beans\",\n          \"title\": \"Senior Lecturer\",\n          \"startDate\": \"2026-07-27T00:00:00.000Z\",\n          \"endDate\": \"2026-08-12T00:00:00.000Z\",\n          \"link\": \"https://terence.com\"\n        }\n      ],\n      \"__v\": 0\n    }\n  ],\n  \"total\": 1,\n  \"page\": 1,\n  \"pages\": 1,\n  \"limit\": 20\n}"
+            },
+            {
+              "name": "200 - search no match",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff?page=1&limit=20&q=zzzznomatch",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    },
+                    {
+                      "key": "q",
+                      "value": "zzzznomatch"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"staff\": [],\n  \"total\": 0,\n  \"page\": 1,\n  \"pages\": 1,\n  \"limit\": 20\n}"
+            },
+            {
+              "name": "200 - single",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff?id=6a887990649c6f16d1ab6d81",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "6a887990649c6f16d1ab6d81"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"staff\": {\n    \"profileImage\": {\n      \"filename\": \"1787328929221-58251590.jpeg\",\n      \"url\": \"/uploads/profileImages/1787328929221-58251590.jpeg\",\n      \"originalName\": \"WhatsApp Image 2026-07-14 at 06.40.08.jpeg\"\n    },\n    \"externalLinks\": {\n      \"googleScholar\": \"https://google.com\",\n      \"researchGate\": \"https://gate.com\",\n      \"collaborationNetwork\": \"https://network.com\"\n    },\n    \"about\": {\n      \"bio\": \"This is my brief Biography for today\",\n      \"degrees\": [\n        \"BEng - Computer Engineering\",\n        \"MSc - Computer affairs\"\n      ]\n    },\n    \"research\": {\n      \"interests\": [\n        \"Quantum Energy\",\n        \"Cyber Bulletting\"\n      ],\n      \"grants\": [\n        {\n          \"title\": \"Mobile Police\",\n          \"date\": \"2026-08-05T00:00:00.000Z\",\n          \"tag\": \"mobile, police, grant\",\n          \"description\": \"Mobile police grant to police the internet like VDM\"\n        },\n        {\n          \"title\": \"Ring Offense\",\n          \"date\": \"2026-08-06T00:00:00.000Z\",\n          \"tag\": \"defence, maturity\",\n          \"description\": \"Defiensive maturity is the key\"\n        }\n      ]\n    },\n    \"_id\": \"6a887990649c6f16d1ab6d81\",\n    \"faculty\": {\n      \"_id\": \"6a86271c9a4264c65ae3b923\",\n      \"name\": \"ENgineering\",\n      \"description\": \"big Fish must be enough for you\",\n      \"createdAt\": \"2026-08-19T21:58:52.154Z\",\n      \"updatedAt\": \"2026-08-19T21:58:52.154Z\",\n      \"__v\": 0\n    },\n    \"department\": [\n      {\n        \"_id\": \"6a86275b9a4264c65ae3b92a\",\n        \"faculty\": \"6a86271c9a4264c65ae3b923\",\n        \"name\": \"Sciences dept\",\n        \"structure\": \"sdfds department must be enought too\",\n        \"mission\": \"department mission\",\n        \"researchFocus\": [\n          \"reseach focus\",\n          \"me and research\",\n          \"big fish\"\n        ],\n        \"createdAt\": \"2026-08-19T21:59:55.201Z\",\n        \"updatedAt\": \"2026-08-19T21:59:55.201Z\",\n        \"__v\": 0\n      }\n    ],\n    \"program\": [\n      {\n        \"programImage\": {\n          \"filename\": \"1787176935168-319590630.png\",\n          \"url\": \"/uploads/programImages/1787176935168-319590630.png\",\n          \"originalName\": \"image (13).png\"\n        },\n        \"_id\": \"6a8627e79a4264c65ae3b956\",\n        \"faculty\": \"6a86271c9a4264c65ae3b923\",\n        \"department\": [\n          \"6a86275b9a4264c65ae3b92a\"\n        ],\n        \"programType\": [\n          \"6a86277a9a4264c65ae3b931\"\n        ],\n        \"name\": \"Program name\",\n        \"description\": \"zcm,djlsjdlsdlkjsdfsdf\",\n        \"level\": [\n          \"ND\"\n        ],\n        \"requiredCredit\": 130,\n        \"duration\": \"3\",\n        \"createdAt\": \"2026-08-19T22:02:15.190Z\",\n        \"updatedAt\": \"2026-08-19T22:02:15.190Z\",\n        \"__v\": 0\n      }\n    ],\n    \"fullName\": \"John Terence Onye\",\n    \"title\": \"Mr\",\n    \"position\": \"Senior Lecturer\",\n    \"specialization\": [\n      \"Machine Learning\",\n      \"RALX Africa\"\n    ],\n    \"phone\": \"+2349066063064\",\n    \"email\": \"onyeweketerence@gmail.com\",\n    \"affiliation\": \"JohnChi University\",\n    \"researchOutputs\": [\n      {\n        \"title\": \"Importance of Cancer to Computer sytems\",\n        \"date\": \"2026-07-29T00:00:00.000Z\",\n        \"collaborators\": [\n          \"Terence\",\n          \"MaryAnn\"\n        ],\n        \"pdfUrl\": \"https://imp_cancer.com\",\n        \"viewLink\": \"\",\n        \"_id\": \"6a8879a3649c6f16d1ab6d8b\"\n      }\n    ],\n    \"professionalActivities\": [\n      {\n        \"type\": \"Tired comma\",\n        \"title\": \"Administrator of Tired Comma\",\n        \"date\": \"2026-08-05T00:00:00.000Z\",\n        \"description\": \"This proofs the mechanism of car evolution is not good at all\"\n      }\n    ],\n    \"teachingActivities\": [\n      {\n        \"tag\": \"make, do, beans\",\n        \"title\": \"Senior Lecturer\",\n        \"startDate\": \"2026-07-27T00:00:00.000Z\",\n        \"endDate\": \"2026-08-12T00:00:00.000Z\",\n        \"link\": \"https://terence.com\"\n      }\n    ],\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "200 - by department (slim)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff?onlystaff=true&id=6a86275b9a4264c65ae3b92a",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ],
+                  "query": [
+                    {
+                      "key": "onlystaff",
+                      "value": "true"
+                    },
+                    {
+                      "key": "id",
+                      "value": "6a86275b9a4264c65ae3b92a"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"profileImage\": {\n        \"filename\": \"1787328929221-58251590.jpeg\",\n        \"url\": \"/uploads/profileImages/1787328929221-58251590.jpeg\",\n        \"originalName\": \"WhatsApp Image 2026-07-14 at 06.40.08.jpeg\"\n      },\n      \"about\": {\n        \"bio\": \"This is my brief Biography for today\",\n        \"degrees\": [\n          \"BEng - Computer Engineering\",\n          \"MSc - Computer affairs\"\n        ]\n      },\n      \"_id\": \"6a887990649c6f16d1ab6d81\",\n      \"fullName\": \"John Terence Onye\",\n      \"position\": \"Senior Lecturer\",\n      \"specialization\": [\n        \"Machine Learning\",\n        \"RALX Africa\"\n      ],\n      \"email\": \"onyeweketerence@gmail.com\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "404 - not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/staff?id=000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "staff"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Staff not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "News",
+      "item": [
+        {
+          "name": "GET /api/v1/news",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/news",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "news"
+              ]
+            },
+            "description": "**Published articles only** (`isActive: true`). Unpublished work is never returned here - the list excludes it and a lookup by `id` returns 404. Use the authenticated `/api/v1/admin/news?status=inactive` to see drafts.\n\n**Query**\n- `id` - return a single published article.\n- `page` - default 1.\n- `limit` - default 10, maximum 100.\n- `search` - case-insensitive match on `title` or `content`.\n\nSorted newest first."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/news",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "news"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"total\": 3,\n  \"page\": 1,\n  \"news\": [\n    {\n      \"_id\": \"6a88431330fb3a55be5b40bc\",\n      \"title\": \"BUSCED STRENGTHENS PRACTICAL LEARNING ACROSS DEPARTMENTS\",\n      \"content\": \"Benjamin Uwajimogu State College of Education continues to strengthen practical learning across its academic departments as part of its commitment to producing skilled, confident, and professional teachers.\\r\\nStudents are actively engaged in classroom activities, laboratory sessions, group projects, and field-based learning designed to connect theory with real-world teaching practice.\\r\\nThe college encourages students to take full advantage of available academic resources and participate actively in departmental programmes.\",\n      \"newsTag\": \"PRACTICAL LEARNING\",\n      \"images\": [\n        {\n          \"filename\": \"1787314963476-669816223.jpg\",\n          \"url\": \"/uploadedNewsImages/1787314963476-669816223.jpg\",\n          \"originalName\": \"bgn3.jpg\",\n          \"_id\": \"6a88431330fb3a55be5b40bd\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T12:22:43.480Z\",\n      \"updatedAt\": \"2026-08-21T12:26:34.696Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a8842c330fb3a55be5b40ab\",\n      \"title\": \"ADMISSION EXERCISE FOR 2026/2027 ACADEMIC SESSION NOW OPEN\",\n      \"content\": \"Benjamin Uwajimogu State College of Education announces that admission into various NCE programmes for the 2026/2027 academic session is now open.\\r\\nProspective students are invited to apply for programmes across the college’s schools and departments. Applicants are encouraged to complete their registration early, provide accurate information, and follow all admission guidelines as published by the college.\\r\\nThe college remains committed to providing quality teacher education, practical learning opportunities, and a supportive academic environment for all students.\",\n      \"newsTag\": \"GENERAL\",\n      \"images\": [\n        {\n          \"filename\": \"1787314883760-726269612.png\",\n          \"url\": \"/uploadedNewsImages/1787314883760-726269612.png\",\n          \"originalName\": \"bgn1.png\",\n          \"_id\": \"6a8842c330fb3a55be5b40ac\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T12:21:23.766Z\",\n      \"updatedAt\": \"2026-08-21T12:21:23.766Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88315930fb3a55be5b3f89\",\n      \"title\": \"ATTENTION ALL ASPIRING STUDENTS\",\n      \"content\": \"Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced.\",\n      \"newsTag\": \"GENERAL\",\n      \"images\": [\n        {\n          \"filename\": \"1787315124545-947290706.jpg\",\n          \"url\": \"/uploadedNewsImages/1787315124545-947290706.jpg\",\n          \"originalName\": \"primary-education.jpg\",\n          \"_id\": \"6a8843b430fb3a55be5b40f5\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T11:07:05.111Z\",\n      \"updatedAt\": \"2026-08-21T12:25:24.547Z\",\n      \"__v\": 2\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - paginated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/news?page=1&limit=10",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "news"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"total\": 3,\n  \"page\": 1,\n  \"news\": [\n    {\n      \"_id\": \"6a88431330fb3a55be5b40bc\",\n      \"title\": \"BUSCED STRENGTHENS PRACTICAL LEARNING ACROSS DEPARTMENTS\",\n      \"content\": \"Benjamin Uwajimogu State College of Education continues to strengthen practical learning across its academic departments as part of its commitment to producing skilled, confident, and professional teachers.\\r\\nStudents are actively engaged in classroom activities, laboratory sessions, group projects, and field-based learning designed to connect theory with real-world teaching practice.\\r\\nThe college encourages students to take full advantage of available academic resources and participate actively in departmental programmes.\",\n      \"newsTag\": \"PRACTICAL LEARNING\",\n      \"images\": [\n        {\n          \"filename\": \"1787314963476-669816223.jpg\",\n          \"url\": \"/uploadedNewsImages/1787314963476-669816223.jpg\",\n          \"originalName\": \"bgn3.jpg\",\n          \"_id\": \"6a88431330fb3a55be5b40bd\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T12:22:43.480Z\",\n      \"updatedAt\": \"2026-08-21T12:26:34.696Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a8842c330fb3a55be5b40ab\",\n      \"title\": \"ADMISSION EXERCISE FOR 2026/2027 ACADEMIC SESSION NOW OPEN\",\n      \"content\": \"Benjamin Uwajimogu State College of Education announces that admission into various NCE programmes for the 2026/2027 academic session is now open.\\r\\nProspective students are invited to apply for programmes across the college’s schools and departments. Applicants are encouraged to complete their registration early, provide accurate information, and follow all admission guidelines as published by the college.\\r\\nThe college remains committed to providing quality teacher education, practical learning opportunities, and a supportive academic environment for all students.\",\n      \"newsTag\": \"GENERAL\",\n      \"images\": [\n        {\n          \"filename\": \"1787314883760-726269612.png\",\n          \"url\": \"/uploadedNewsImages/1787314883760-726269612.png\",\n          \"originalName\": \"bgn1.png\",\n          \"_id\": \"6a8842c330fb3a55be5b40ac\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T12:21:23.766Z\",\n      \"updatedAt\": \"2026-08-21T12:21:23.766Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88315930fb3a55be5b3f89\",\n      \"title\": \"ATTENTION ALL ASPIRING STUDENTS\",\n      \"content\": \"Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced.\",\n      \"newsTag\": \"GENERAL\",\n      \"images\": [\n        {\n          \"filename\": \"1787315124545-947290706.jpg\",\n          \"url\": \"/uploadedNewsImages/1787315124545-947290706.jpg\",\n          \"originalName\": \"primary-education.jpg\",\n          \"_id\": \"6a8843b430fb3a55be5b40f5\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T11:07:05.111Z\",\n      \"updatedAt\": \"2026-08-21T12:25:24.547Z\",\n      \"__v\": 2\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - search",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/news?search=a",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "news"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "a"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"total\": 3,\n  \"page\": 1,\n  \"news\": [\n    {\n      \"_id\": \"6a88431330fb3a55be5b40bc\",\n      \"title\": \"BUSCED STRENGTHENS PRACTICAL LEARNING ACROSS DEPARTMENTS\",\n      \"content\": \"Benjamin Uwajimogu State College of Education continues to strengthen practical learning across its academic departments as part of its commitment to producing skilled, confident, and professional teachers.\\r\\nStudents are actively engaged in classroom activities, laboratory sessions, group projects, and field-based learning designed to connect theory with real-world teaching practice.\\r\\nThe college encourages students to take full advantage of available academic resources and participate actively in departmental programmes.\",\n      \"newsTag\": \"PRACTICAL LEARNING\",\n      \"images\": [\n        {\n          \"filename\": \"1787314963476-669816223.jpg\",\n          \"url\": \"/uploadedNewsImages/1787314963476-669816223.jpg\",\n          \"originalName\": \"bgn3.jpg\",\n          \"_id\": \"6a88431330fb3a55be5b40bd\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T12:22:43.480Z\",\n      \"updatedAt\": \"2026-08-21T12:26:34.696Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a8842c330fb3a55be5b40ab\",\n      \"title\": \"ADMISSION EXERCISE FOR 2026/2027 ACADEMIC SESSION NOW OPEN\",\n      \"content\": \"Benjamin Uwajimogu State College of Education announces that admission into various NCE programmes for the 2026/2027 academic session is now open.\\r\\nProspective students are invited to apply for programmes across the college’s schools and departments. Applicants are encouraged to complete their registration early, provide accurate information, and follow all admission guidelines as published by the college.\\r\\nThe college remains committed to providing quality teacher education, practical learning opportunities, and a supportive academic environment for all students.\",\n      \"newsTag\": \"GENERAL\",\n      \"images\": [\n        {\n          \"filename\": \"1787314883760-726269612.png\",\n          \"url\": \"/uploadedNewsImages/1787314883760-726269612.png\",\n          \"originalName\": \"bgn1.png\",\n          \"_id\": \"6a8842c330fb3a55be5b40ac\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T12:21:23.766Z\",\n      \"updatedAt\": \"2026-08-21T12:21:23.766Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88315930fb3a55be5b3f89\",\n      \"title\": \"ATTENTION ALL ASPIRING STUDENTS\",\n      \"content\": \"Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced. Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced.\",\n      \"newsTag\": \"GENERAL\",\n      \"images\": [\n        {\n          \"filename\": \"1787315124545-947290706.jpg\",\n          \"url\": \"/uploadedNewsImages/1787315124545-947290706.jpg\",\n          \"originalName\": \"primary-education.jpg\",\n          \"_id\": \"6a8843b430fb3a55be5b40f5\"\n        }\n      ],\n      \"isActive\": true,\n      \"createdAt\": \"2026-08-21T11:07:05.111Z\",\n      \"updatedAt\": \"2026-08-21T12:25:24.547Z\",\n      \"__v\": 2\n    }\n  ]\n}"
+            },
+            {
+              "name": "200 - single",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/news?id=6a88431330fb3a55be5b40bc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "news"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "6a88431330fb3a55be5b40bc"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"news\": {\n    \"_id\": \"6a88431330fb3a55be5b40bc\",\n    \"title\": \"BUSCED STRENGTHENS PRACTICAL LEARNING ACROSS DEPARTMENTS\",\n    \"content\": \"Benjamin Uwajimogu State College of Education continues to strengthen practical learning across its academic departments as part of its commitment to producing skilled, confident, and professional teachers.\\r\\nStudents are actively engaged in classroom activities, laboratory sessions, group projects, and field-based learning designed to connect theory with real-world teaching practice.\\r\\nThe college encourages students to take full advantage of available academic resources and participate actively in departmental programmes.\",\n    \"newsTag\": \"PRACTICAL LEARNING\",\n    \"images\": [\n      {\n        \"filename\": \"1787314963476-669816223.jpg\",\n        \"url\": \"/uploadedNewsImages/1787314963476-669816223.jpg\",\n        \"originalName\": \"bgn3.jpg\",\n        \"_id\": \"6a88431330fb3a55be5b40bd\"\n      }\n    ],\n    \"isActive\": true,\n    \"createdAt\": \"2026-08-21T12:22:43.480Z\",\n    \"updatedAt\": \"2026-08-21T12:26:34.696Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "404 - not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/news?id=000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "news"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"News not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "GET /api/v1/events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "events"
+              ]
+            },
+            "description": "**Upcoming events only** - dated today or later, soonest first.\n\n**Query**\n- `id` - return a single event (any date, not just upcoming).\n- `page` - default 1.\n- `limit` - default 6.\n\nThe dashboard uses a different, authenticated endpoint (`/api/v1/admin/events`) that returns *all* events newest-first."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/events",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "events"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"events\": [\n    {\n      \"_id\": \"6a885c485e736e182d008954\",\n      \"title\": \"Amarachi, YOu no get sense at all\",\n      \"description\": \"I swear\",\n      \"date\": \"2026-08-28T00:00:00.000Z\",\n      \"startTime\": \"17:12\",\n      \"endTime\": \"17:12\",\n      \"location\": \"Netpro Head Office\",\n      \"createdAt\": \"2026-08-21T14:10:16.077Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a882ff030fb3a55be5b3f72\",\n      \"title\": \"Admission into the Benjamin Uwajimogu State College Of Education\",\n      \"description\": \"Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced.\",\n      \"date\": \"2026-08-30T00:00:00.000Z\",\n      \"startTime\": \"00:59\",\n      \"endTime\": \"01:00\",\n      \"location\": \"Busced Administration block\",\n      \"createdAt\": \"2026-08-21T11:01:04.034Z\",\n      \"__v\": 0\n    }\n  ],\n  \"total\": 2,\n  \"limit\": 6,\n  \"page\": 1\n}"
+            },
+            {
+              "name": "200 - paginated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/events?page=1&limit=6",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "6"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"events\": [\n    {\n      \"_id\": \"6a885c485e736e182d008954\",\n      \"title\": \"Amarachi, YOu no get sense at all\",\n      \"description\": \"I swear\",\n      \"date\": \"2026-08-28T00:00:00.000Z\",\n      \"startTime\": \"17:12\",\n      \"endTime\": \"17:12\",\n      \"location\": \"Netpro Head Office\",\n      \"createdAt\": \"2026-08-21T14:10:16.077Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a882ff030fb3a55be5b3f72\",\n      \"title\": \"Admission into the Benjamin Uwajimogu State College Of Education\",\n      \"description\": \"Admission into the Benjamin Uwajimogu State College Of Education for 2026/2027 academic session has commenced.\",\n      \"date\": \"2026-08-30T00:00:00.000Z\",\n      \"startTime\": \"00:59\",\n      \"endTime\": \"01:00\",\n      \"location\": \"Busced Administration block\",\n      \"createdAt\": \"2026-08-21T11:01:04.034Z\",\n      \"__v\": 0\n    }\n  ],\n  \"total\": 2,\n  \"limit\": 6,\n  \"page\": 1\n}"
+            },
+            {
+              "name": "200 - single",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/events?id=6a885c485e736e182d008954",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "6a885c485e736e182d008954"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"event\": {\n    \"_id\": \"6a885c485e736e182d008954\",\n    \"title\": \"Amarachi, YOu no get sense at all\",\n    \"description\": \"I swear\",\n    \"date\": \"2026-08-28T00:00:00.000Z\",\n    \"startTime\": \"17:12\",\n    \"endTime\": \"17:12\",\n    \"location\": \"Netpro Head Office\",\n    \"createdAt\": \"2026-08-21T14:10:16.077Z\",\n    \"__v\": 0\n  }\n}"
+            },
+            {
+              "name": "404 - not found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/events?id=000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "events"
+                  ],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "000000000000000000000000"
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Event not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "GET /api/v1/gallery",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/gallery",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "gallery"
+              ]
+            },
+            "description": "Gallery images, newest first.\n\n**Query**\n- `page` - default 1.\n- `limit` - default 12."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/gallery",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "gallery"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"images\": [\n    {\n      \"_id\": \"6a883c6630fb3a55be5b404b\",\n      \"filename\": \"1787313254874-4408077.png\",\n      \"url\": \"/uploads/galleryImages/1787313254874-4408077.png\",\n      \"altText\": \"Integrated Science\",\n      \"createdAt\": \"2026-08-21T11:54:14.878Z\",\n      \"updatedAt\": \"2026-08-21T11:54:14.878Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a883c3430fb3a55be5b4047\",\n      \"filename\": \"1787313204373-947419222.jpg\",\n      \"url\": \"/uploads/galleryImages/1787313204373-947419222.jpg\",\n      \"altText\": \"bgn1.jpg\",\n      \"createdAt\": \"2026-08-21T11:53:24.376Z\",\n      \"updatedAt\": \"2026-08-21T11:53:24.376Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a883a5230fb3a55be5b401f\",\n      \"filename\": \"1787312722842-842379294.jpg\",\n      \"url\": \"/uploads/galleryImages/1787312722842-842379294.jpg\",\n      \"altText\": \"Library\",\n      \"createdAt\": \"2026-08-21T11:45:22.843Z\",\n      \"updatedAt\": \"2026-08-21T11:45:22.843Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a8839f630fb3a55be5b4011\",\n      \"filename\": \"1787312630111-214159835.jpeg\",\n      \"url\": \"/uploads/galleryImages/1787312630111-214159835.jpeg\",\n      \"altText\": \"bursar.jpeg\",\n      \"createdAt\": \"2026-08-21T11:43:50.112Z\",\n      \"updatedAt\": \"2026-08-21T11:43:50.112Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88395a30fb3a55be5b4001\",\n      \"filename\": \"1787312474340-619634404.png\",\n      \"url\": \"/uploads/galleryImages/1787312474340-619634404.png\",\n      \"altText\": \"School of General Studies\",\n      \"createdAt\": \"2026-08-21T11:41:14.343Z\",\n      \"updatedAt\": \"2026-08-21T11:41:14.343Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88393330fb3a55be5b3ffd\",\n      \"filename\": \"1787312435009-352685929.png\",\n      \"url\": \"/uploads/galleryImages/1787312435009-352685929.png\",\n      \"altText\": \"Business Education\",\n      \"createdAt\": \"2026-08-21T11:40:35.011Z\",\n      \"updatedAt\": \"2026-08-21T11:40:35.011Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88327a30fb3a55be5b3fad\",\n      \"filename\": \"1787310714969-851945120.jpg\",\n      \"url\": \"/uploads/galleryImages/1787310714969-851945120.jpg\",\n      \"altText\": \"graduation\",\n      \"createdAt\": \"2026-08-21T11:11:54.973Z\",\n      \"updatedAt\": \"2026-08-21T11:11:54.973Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88325d30fb3a55be5b3fa5\",\n      \"filename\": \"1787310685718-508258480.png\",\n      \"url\": \"/uploads/galleryImages/1787310685718-508258480.png\",\n      \"altText\": \"early-childhood.png\",\n      \"createdAt\": \"2026-08-21T11:11:25.720Z\",\n      \"updatedAt\": \"2026-08-21T11:11:25.720Z\",\n      \"__v\": 0\n    }\n  ],\n  \"currentPage\": 1,\n  \"totalPages\": 1\n}"
+            },
+            {
+              "name": "200 - paginated",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/gallery?page=1&limit=12",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "gallery"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "12"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"images\": [\n    {\n      \"_id\": \"6a883c6630fb3a55be5b404b\",\n      \"filename\": \"1787313254874-4408077.png\",\n      \"url\": \"/uploads/galleryImages/1787313254874-4408077.png\",\n      \"altText\": \"Integrated Science\",\n      \"createdAt\": \"2026-08-21T11:54:14.878Z\",\n      \"updatedAt\": \"2026-08-21T11:54:14.878Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a883c3430fb3a55be5b4047\",\n      \"filename\": \"1787313204373-947419222.jpg\",\n      \"url\": \"/uploads/galleryImages/1787313204373-947419222.jpg\",\n      \"altText\": \"bgn1.jpg\",\n      \"createdAt\": \"2026-08-21T11:53:24.376Z\",\n      \"updatedAt\": \"2026-08-21T11:53:24.376Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a883a5230fb3a55be5b401f\",\n      \"filename\": \"1787312722842-842379294.jpg\",\n      \"url\": \"/uploads/galleryImages/1787312722842-842379294.jpg\",\n      \"altText\": \"Library\",\n      \"createdAt\": \"2026-08-21T11:45:22.843Z\",\n      \"updatedAt\": \"2026-08-21T11:45:22.843Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a8839f630fb3a55be5b4011\",\n      \"filename\": \"1787312630111-214159835.jpeg\",\n      \"url\": \"/uploads/galleryImages/1787312630111-214159835.jpeg\",\n      \"altText\": \"bursar.jpeg\",\n      \"createdAt\": \"2026-08-21T11:43:50.112Z\",\n      \"updatedAt\": \"2026-08-21T11:43:50.112Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88395a30fb3a55be5b4001\",\n      \"filename\": \"1787312474340-619634404.png\",\n      \"url\": \"/uploads/galleryImages/1787312474340-619634404.png\",\n      \"altText\": \"School of General Studies\",\n      \"createdAt\": \"2026-08-21T11:41:14.343Z\",\n      \"updatedAt\": \"2026-08-21T11:41:14.343Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88393330fb3a55be5b3ffd\",\n      \"filename\": \"1787312435009-352685929.png\",\n      \"url\": \"/uploads/galleryImages/1787312435009-352685929.png\",\n      \"altText\": \"Business Education\",\n      \"createdAt\": \"2026-08-21T11:40:35.011Z\",\n      \"updatedAt\": \"2026-08-21T11:40:35.011Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88327a30fb3a55be5b3fad\",\n      \"filename\": \"1787310714969-851945120.jpg\",\n      \"url\": \"/uploads/galleryImages/1787310714969-851945120.jpg\",\n      \"altText\": \"graduation\",\n      \"createdAt\": \"2026-08-21T11:11:54.973Z\",\n      \"updatedAt\": \"2026-08-21T11:11:54.973Z\",\n      \"__v\": 0\n    },\n    {\n      \"_id\": \"6a88325d30fb3a55be5b3fa5\",\n      \"filename\": \"1787310685718-508258480.png\",\n      \"url\": \"/uploads/galleryImages/1787310685718-508258480.png\",\n      \"altText\": \"early-childhood.png\",\n      \"createdAt\": \"2026-08-21T11:11:25.720Z\",\n      \"updatedAt\": \"2026-08-21T11:11:25.720Z\",\n      \"__v\": 0\n    }\n  ],\n  \"currentPage\": 1,\n  \"totalPages\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/hero-images",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/hero-images",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "hero-images"
+              ]
+            },
+            "description": "Homepage hero images, newest first. Same paging as the gallery. `createdAt`, `updatedAt` and `__v` are omitted."
+          },
+          "response": [
+            {
+              "name": "200 - list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/hero-images",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "hero-images"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"images\": [],\n  \"currentPage\": 1,\n  \"totalPages\": 0\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Site settings",
+      "item": [
+        {
+          "name": "GET /api/v1/settings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "settings"
+              ]
+            },
+            "description": "Site title and branding image URLs. Always returns a document - defaults are created on first read, so this never 404s."
+          },
+          "response": [
+            {
+              "name": "200 - get",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/settings",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "settings"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Settings fetched successfully\",\n  \"data\": {\n    \"siteTitle\": \"BUSCED CMS\",\n    \"logoUrl\": \"/uploads/settingsImages/1787309294886-49027232.png\",\n    \"logoSmallUrl\": \"/uploads/settingsImages/1787316355529-452194969.png\",\n    \"faviconUrl\": \"/uploads/settingsImages/1787316355529-841558481.png\",\n    \"authLogoUrl\": \"/uploads/settingsImages/1787316368490-755841303.png\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Forms",
+      "item": [
+        {
+          "name": "POST /api/v1/contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/contact",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "contact"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Contact form. Emails the submission to the address configured as `EMAIL_RECEIVER`.\n\n**Body** - all four required\n- `fullName`\n- `email` - must look like an email address.\n- `subject` - **more than 15 characters**.\n- `message` - **more than 30 characters**.\n\nThe response is sent **before** the mail is dispatched, so `200` confirms the submission was accepted, not that the email was delivered. A later SMTP failure is logged server-side only."
+          },
+          "response": [
+            {
+              "name": "400 - all fields missing",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/contact",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "contact"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"All fields are required.\"\n}"
+            },
+            {
+              "name": "400 - invalid email",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/contact",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "contact"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"Test\",\n  \"email\": \"not-an-email\",\n  \"subject\": \"A subject long enough\",\n  \"message\": \"A message that is definitely longer than thirty characters.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Please enter a valid email address.\"\n}"
+            },
+            {
+              "name": "400 - subject too short",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/contact",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "contact"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"Test\",\n  \"email\": \"t@example.com\",\n  \"subject\": \"short\",\n  \"message\": \"A message that is definitely longer than thirty characters.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Your subject must be more than 15 characters.\"\n}"
+            },
+            {
+              "name": "400 - message too short",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/contact",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "contact"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"Test\",\n  \"email\": \"t@example.com\",\n  \"subject\": \"A subject long enough\",\n  \"message\": \"too short\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Your message must be more than 30 characters.\"\n}"
+            },
+            {
+              "name": "200 - success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/contact",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "contact"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"API Docs Test\",\n  \"email\": \"api-docs-test@example.com\",\n  \"subject\": \"Endpoint documentation test message\",\n  \"message\": \"This request was sent while generating the public API documentation. Please ignore it.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Message sent successfully!\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /api/v1/subscribe-newsletter",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/subscribe-newsletter",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "subscribe-newsletter"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Newsletter signup.\n\n**Body**\n- `email` - required, must look like an email address. Stored lowercased and trimmed.\n\nRe-submitting an address that already exists returns `400` rather than creating a duplicate."
+          },
+          "response": [
+            {
+              "name": "400 - email missing",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/subscribe-newsletter",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "subscribe-newsletter"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Email is required.\"\n}"
+            },
+            {
+              "name": "400 - invalid email",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/subscribe-newsletter",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "subscribe-newsletter"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"not-an-email\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"Please enter a valid email address.\"\n}"
+            },
+            {
+              "name": "200 - success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/subscribe-newsletter",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "subscribe-newsletter"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"api-docs-test@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Successfully subscribed to the newsletter.\"\n}"
+            },
+            {
+              "name": "400 - already subscribed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/subscribe-newsletter",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "subscribe-newsletter"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"api-docs-test@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"You are already subscribed to our newsletter.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST /api/v1/request-account-deletion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/request-account-deletion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "request-account-deletion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Records a request to delete a user account.\n\n**Body**\n- `fullName` - required.\n- `email` - required.\n- `reason` - optional.\n\nA missing required field returns **500**, not 400 - the Mongoose validation error is caught by a generic handler."
+          },
+          "response": [
+            {
+              "name": "500 - empty body",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/request-account-deletion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "request-account-deletion"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": false,\n  \"message\": \"An error occurred while processing your request.\"\n}"
+            },
+            {
+              "name": "201 - success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/request-account-deletion",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "request-account-deletion"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"fullName\": \"API Docs Test\",\n  \"email\": \"api-docs-test@example.com\",\n  \"reason\": \"Documentation test request - safe to ignore.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"success\": true,\n  \"message\": \"Your account deletion request has been received.\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chatbot",
+      "item": [
+        {
+          "name": "POST /api/v1/chat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/chat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "chat"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"What programmes does the college offer?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Answers a visitor question. Tries the FAQ collection first, then the stored context, then falls back to Gemini.\n\n**Body**\n- `message` - the visitor's question.\n\nReturns `{ reply }` - this endpoint does **not** use the `success` envelope. If every stage fails, the reply is the fallback string \"I'm not sure. Please contact the school.\""
+          },
+          "response": [
+            {
+              "name": "200 - success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/chat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "chat"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"What programmes does the college offer?\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"reply\": \"The University of Agriculture and Environmental Science (UAES), Umuagwo, offers a diverse range of academic programmes primarily focused on agriculture, environmental science, and related disciplines. For a comprehensive and up-to-date list of all available undergraduate and postgraduate programmes, including their specific requirements, I recommend visiting the official UAES website or contacting the Admissions office directly. They can provide detailed information on all current offerings. Are you interested in a particular field of study, or perhaps a specific level of degree?\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

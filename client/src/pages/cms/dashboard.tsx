@@ -133,7 +133,7 @@ function StatCard({
 
 export default function DashboardPage() {
   const summary = useResource<Summary>(
-    "/api/dashboard-summary",
+    "/api/v1/dashboard-summary",
     (p) => p.data as Summary,
   );
 
@@ -143,7 +143,7 @@ export default function DashboardPage() {
   );
 
   const upcomingEvents = useResource<EventItem[]>(
-    "/api/events?page=1&limit=5",
+    "/api/v1/admin/events?page=1&limit=5",
     (p) => (p.events ?? []) as EventItem[],
   );
 

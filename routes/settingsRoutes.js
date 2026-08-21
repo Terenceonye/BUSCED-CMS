@@ -6,10 +6,10 @@ const { protect } = require("../middlewares/authMiddleware");
 
 // Admin page
 // Read is public: the login/OTP pages and the website need the branding.
-router.get("/api/settings", controller.getSettings);
+router.get("/settings", controller.getSettings);
 
 router.put(
-  "/api/settings",
+  "/settings",
   protect,
   acceptSettingsImage.fields([
     { name: "logo", maxCount: 1 },
@@ -20,6 +20,6 @@ router.put(
   controller.updateSettings,
 );
 
-router.post("/api/settings/reset-image", protect, controller.resetImage);
+router.post("/settings/reset-image", protect, controller.resetImage);
 
 module.exports = router;

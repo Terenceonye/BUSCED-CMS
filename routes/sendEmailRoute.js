@@ -5,7 +5,7 @@ const NewsLetter = require("../models/newsLetterModel");
 
 const router = express.Router();
 
-router.post("/api/v1/contact", async (req, res) => {
+router.post("/contact", async (req, res) => {
   const { fullName, email, subject, message } = req.body;
 
   // Basic validation
@@ -91,7 +91,7 @@ router.post("/api/v1/contact", async (req, res) => {
   }
 });
 
-router.post("/api/v1/subscribe-newsletter", async (req, res) => {
+router.post("/subscribe-newsletter", async (req, res) => {
   const { email } = req.body;
 
   if (!email) {

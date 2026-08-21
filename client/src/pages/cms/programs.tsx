@@ -108,7 +108,7 @@ export default function ProgramsPage() {
     try {
       // This endpoint returns { success, programs } - not the { data } envelope
       // the other resources use.
-      const payload = await get("/api/programs");
+      const payload = await get("/api/v1/programs");
       setRows((payload?.programs ?? []) as Program[]);
     } catch (err: any) {
       setError(err?.message || "Could not load programs.");
@@ -127,9 +127,9 @@ export default function ProgramsPage() {
       list.map((o) => ({ value: o._id, label: o[labelKey] ?? o._id }));
 
     Promise.all([
-      get("/api/schools").catch(() => ({})),
-      get("/api/departments").catch(() => ({})),
-      get("/api/program-types").catch(() => ({})),
+      get("/api/v1/schools").catch(() => ({})),
+      get("/api/v1/departments").catch(() => ({})),
+      get("/api/v1/program-types").catch(() => ({})),
     ]).then(([f, d, p]) => {
       setFaculties(toOptions(f?.data ?? [], "name"));
       setDepartments(toOptions(d?.data ?? [], "name"));
@@ -241,10 +241,10 @@ export default function ProgramsPage() {
     setSaving(true);
     try {
       if (editing) {
-        await api(`/api/programs/${editing._id}`, { method: "PUT", body: form });
+        await api(`/api/v1/programs/${editing._id}`, { method: "PUT", body: form });
         toast.success("Program updated");
       } else {
-        await api("/api/programs", { method: "POST", body: form });
+        await api("/api/v1/programs", { method: "POST", body: form });
         toast.success("Program created");
       }
       setOpen(false);
@@ -260,7 +260,7 @@ export default function ProgramsPage() {
     if (!confirm.target) return;
     confirm.setLoading(true);
     try {
-      await del(`/api/programs/${confirm.target._id}`);
+      await del(`/api/v1/programs/${confirm.target._id}`);
       toast.success("Program deleted");
       confirm.close();
       await load();

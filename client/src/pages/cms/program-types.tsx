@@ -12,7 +12,7 @@ export default function ProgramTypesPage() {
     <CrudPage<ProgramType>
       title="Program Types"
       description="Categories used to group academic programs."
-      endpoint="/api/program-types"
+      endpoint="/api/v1/program-types"
       singular="Program type"
       searchKey="programTypeName"
       rowLabel={(row) => row.programTypeName}

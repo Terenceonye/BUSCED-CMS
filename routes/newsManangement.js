@@ -16,7 +16,10 @@ function listNews(baseQuery = {}) {
       const { id } = req.query;
 
       if (id) {
-        const newsItem = await News.findById(id);
+        // The base filter has to apply here too. Looking up by id alone would
+        // keep an unpublished article readable even once it is gone from the
+        // list, which is the same leak by a different route.
+        const newsItem = await News.findOne({ ...baseQuery, _id: id });
         if (!newsItem) {
           return res
             .status(404)
@@ -58,10 +61,12 @@ function listNews(baseQuery = {}) {
   };
 }
 
-// All news
-router.get("/api/v1/news", listNews());
+// Both routes are unauthenticated, so both return published articles only.
+// Unpublished work is reachable through the authenticated dashboard API
+// (/api/v1/admin/news?status=inactive), never from here.
+router.get("/news", listNews({ isActive: true }));
 
-// Published news only
-router.get("/api/v1/news/active", listNews({ isActive: true }));
+// Kept as an explicit alias for callers already pointing at it.
+router.get("/news/active", listNews({ isActive: true }));
 
 module.exports = router;

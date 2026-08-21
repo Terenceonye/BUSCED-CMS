@@ -93,7 +93,7 @@ export default function EventsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await get(`/api/events?page=${page}&limit=${PER_PAGE}`);
+      const res = await get(`/api/v1/admin/events?page=${page}&limit=${PER_PAGE}`);
       setEvents((res?.events ?? []) as EventItem[]);
       setTotal(res?.total ?? 0);
     } catch (err: any) {
@@ -154,10 +154,10 @@ export default function EventsPage() {
       };
 
       if (editing) {
-        await put(`/api/events/${editing._id}`, payload);
+        await put(`/api/v1/admin/events/${editing._id}`, payload);
         toast.success("Event updated");
       } else {
-        await post("/api/events", payload);
+        await post("/api/v1/admin/events", payload);
         toast.success("Event created");
       }
       setOpen(false);
@@ -173,7 +173,7 @@ export default function EventsPage() {
     if (!confirm.target) return;
     confirm.setLoading(true);
     try {
-      await del(`/api/events/${confirm.target._id}`);
+      await del(`/api/v1/admin/events/${confirm.target._id}`);
       toast.success("Event deleted");
       confirm.close();
       if (events.length === 1 && page > 1) setPage((p) => p - 1);

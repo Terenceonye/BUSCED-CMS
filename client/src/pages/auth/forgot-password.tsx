@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      await post("/api/forgot-password", { email: values.email }, {
+      await post("/api/v1/auth/forgot-password", { email: values.email }, {
         allowUnauthorized: true,
       });
       // The OTP screen needs the email to verify against.

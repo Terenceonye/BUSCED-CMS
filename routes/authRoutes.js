@@ -17,17 +17,17 @@ router.post("/login", validateLogin, authController.login);
 
 // @route   POST /api/auth/forgot-password
 router.post(
-  "/api/forgot-password",
+  "/forgot-password",
   validateForgotPassword,
   authController.forgotPassword
 );
 
 // @route   POST /api/auth/verify-otp
-router.post("/api/verify-otp", validateVerifyOtp, authController.verifyOtp);
+router.post("/verify-otp", validateVerifyOtp, authController.verifyOtp);
 
 // @route   POST /api/auth/reset-password
 router.post(
-  "/api/reset-password",
+  "/reset-password",
   validateResetPassword,
   authController.resetPassword
 );

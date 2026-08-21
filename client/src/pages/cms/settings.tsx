@@ -117,7 +117,7 @@ export default function SettingsPage() {
 
     setSaving(true);
     try {
-      await api("/api/settings", { method: "PUT", body: form });
+      await api("/api/v1/settings", { method: "PUT", body: form });
       setFiles({});
       await refresh();
       toast.success("Settings saved");
@@ -132,7 +132,7 @@ export default function SettingsPage() {
     if (!confirm.target) return;
     confirm.setLoading(true);
     try {
-      await post("/api/settings/reset-image", { field: confirm.target.key });
+      await post("/api/v1/settings/reset-image", { field: confirm.target.key });
       await refresh();
       toast.success("Image reset to default");
       confirm.close();

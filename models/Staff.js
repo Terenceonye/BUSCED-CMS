@@ -84,4 +84,9 @@ const staffSchema = new mongoose.Schema({
   ],
 });
 
+// Needed for "newest first" ordering: the list query already sorted on
+// createdAt, but without this option the field was never written, so every
+// document tied and the sort silently did nothing.
+staffSchema.set("timestamps", true);
+
 module.exports = mongoose.model("Staff", staffSchema);

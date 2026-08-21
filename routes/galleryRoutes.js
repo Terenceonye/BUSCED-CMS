@@ -10,7 +10,7 @@ const { protect } = require("../middlewares/authMiddleware");
 
 // Upload new image
 router.post(
-  "/api/gallery",
+  "/gallery",
   protect,
   acceptGalleryImage.single("image"),
   async (req, res) => {
@@ -40,7 +40,7 @@ router.post(
 );
 
 // Fetch images (Public route also used inside admin panel)
-router.get("/api/gallery", async (req, res) => {
+router.get("/gallery", async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 12; // images per page
@@ -69,7 +69,7 @@ router.get("/api/gallery", async (req, res) => {
 });
 
 // Delete image
-router.delete("/api/gallery/:id", protect, async (req, res) => {
+router.delete("/gallery/:id", protect, async (req, res) => {
   try {
     const image = await GalleryImage.findById(req.params.id);
     if (!image) {

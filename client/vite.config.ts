@@ -34,6 +34,10 @@ export default defineConfig({
           if (/^(recharts|d3-|victory-|internmap|delaunator|robust-predicates)/.test(path)) {
             return "charts";
           }
+          // Face detection for staff photos. Kept out of "vendor" so it stays a
+          // lazy chunk - it is only fetched when someone picks a profile photo,
+          // and it is larger than the rest of the dashboard put together.
+          if (/^(face-api\.js|@tensorflow\/)/.test(path)) return "face";
           if (path.startsWith("@radix-ui/")) return "radix";
           return "vendor";
         },

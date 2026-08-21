@@ -71,37 +71,81 @@ app.use(express.static(path.join(__dirname, "public")));
 // bundles from /app-assets, which is why the SPA does not use /assets.
 app.use(express.static(path.join(__dirname, "public", "app")));
 
+// Endpoints used to be spread across /api/..., /api/v1/... and the site root.
+// They are all served from /api/v1 now; these rules rewrite the older paths
+// onto the new ones so the public website and any other existing caller keeps
+// working. Delete a rule once nothing requests that path any more.
+const LEGACY_API_PATHS = [
+  // Auth lived at three different prefixes, including an /api/auth/api/... form.
+  [/^\/api\/auth\/api\/(forgot-password|verify-otp|reset-password)(?=$|[/?])/, "/api/v1/auth/$1"],
+  [/^\/api\/(forgot-password|verify-otp|reset-password)(?=$|[/?])/, "/api/v1/auth/$1"],
+  [/^\/api\/auth(?=$|[/?])/, "/api/v1/auth"],
+  // The dashboard's protected events endpoint. It cannot become /api/v1/events,
+  // which is a different, public handler returning only upcoming events.
+  [/^\/api\/events(?=$|[/?])/, "/api/v1/admin/events"],
+  // Everything else keeps its name and only gains the version segment.
+  [/^\/api\/(?!v1(?=$|[/?]))/, "/api/v1/"],
+];
+
+// Auth endpoints that answered at the site root, from the server-rendered
+// dashboard. Matched on method as well as path so the React app's own /login
+// and /change-password pages (GET) still render.
+const LEGACY_ROOT_PATHS = {
+  "POST /login": "/api/v1/auth/login",
+  "POST /change-password": "/api/v1/auth/change-password",
+  "GET /verify": "/api/v1/auth/verify",
+};
+
+app.use((req, res, next) => {
+  const [pathname, queryString] = req.url.split("?");
+  const rootKey = `${req.method} ${pathname}`;
+
+  if (LEGACY_ROOT_PATHS[rootKey]) {
+    req.url = LEGACY_ROOT_PATHS[rootKey] + (queryString ? `?${queryString}` : "");
+    return next();
+  }
+
+  for (const [pattern, replacement] of LEGACY_API_PATHS) {
+    if (pattern.test(pathname)) {
+      req.url =
+        pathname.replace(pattern, replacement) +
+        (queryString ? `?${queryString}` : "");
+      break;
+    }
+  }
+  next();
+});
+
 // DASHBOARD ROUTES
-app.use("/", require("./routes/dashboardRoutes"));
+app.use("/api/v1", require("./routes/dashboardRoutes"));
 
-// Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/schools", require("./routes/facultyRoutes"));
-app.use("/api/departments", require("./routes/departmentRoutes"));
-app.use("/api/program-types", require("./routes/programsTypeRoutes"));
-app.use("/api/programs", require("./routes/programRoutes"));
-app.use("/api/staff", require("./routes/staffRoutes"));
+// Every endpoint lives under /api/v1. Paths used before that rule are rewritten
+// onto it by the compatibility layer above, so existing callers keep working.
+app.use("/api/v1/auth", require("./routes/authRoutes"));
+app.use("/api/v1/schools", require("./routes/facultyRoutes"));
+app.use("/api/v1/departments", require("./routes/departmentRoutes"));
+app.use("/api/v1/program-types", require("./routes/programsTypeRoutes"));
+app.use("/api/v1/programs", require("./routes/programRoutes"));
+app.use("/api/v1/staff", require("./routes/staffRoutes"));
 
-// Use API routes
 app.use("/api/v1", faqRoutes);
 app.use("/api/v1", chatRoutes);
-app.use("/", sendEmailRoute);
+app.use("/api/v1", sendEmailRoute);
 
 //News Management
-app.use("/", require("./routes/newsManangement"));
+app.use("/api/v1", require("./routes/newsManangement"));
 
-app.use("/", require("./routes/eventsRoute"));
+// Declares both the public /events and the protected /admin/events.
+app.use("/api/v1", require("./routes/eventsRoute"));
 
-app.use("/", require("./routes/galleryRoutes"));
+app.use("/api/v1", require("./routes/galleryRoutes"));
 
-app.use("/", require("./routes/heroImagesRoutes"));
-
-app.use("/", require("./routes/authRoutes"));
+app.use("/api/v1", require("./routes/heroImagesRoutes"));
 
 app.use("/api/v1", require("./routes/accountDeletionRoutes"));
 
 //Site Settings (CMS title & logo)
-app.use("/", require("./routes/settingsRoutes"));
+app.use("/api/v1", require("./routes/settingsRoutes"));
 
 //News CRUD used by the React dashboard
 app.use("/api/v1/admin/news", require("./routes/newsApiRoutes"));

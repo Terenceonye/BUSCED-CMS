@@ -120,7 +120,7 @@ export default function VerifyOtpPage() {
     setSubmitting(true);
     setError(null);
     try {
-      await post("/api/verify-otp", { email, otp: value }, {
+      await post("/api/v1/auth/verify-otp", { email, otp: value }, {
         allowUnauthorized: true,
       });
       toast.success("Code verified");
@@ -138,7 +138,7 @@ export default function VerifyOtpPage() {
   const resend = async () => {
     setResending(true);
     try {
-      await post("/api/forgot-password", { email }, { allowUnauthorized: true });
+      await post("/api/v1/auth/forgot-password", { email }, { allowUnauthorized: true });
       toast.success("A new code is on its way");
       setCode("");
       setError(null);

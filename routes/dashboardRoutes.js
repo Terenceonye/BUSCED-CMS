@@ -15,7 +15,7 @@ const Event = require("../models/eventsModel");
 const News = require("../models/newsModel");
 const AIRecord = require("../models/faqModel"); // Assuming you have an AI record model
 
-router.get("/api/dashboard-summary", protect, async (req, res) => {
+router.get("/dashboard-summary", protect, async (req, res) => {
   try {
     const [
       schoolCount,

@@ -65,7 +65,7 @@ export interface ColumnConfig<T> {
 interface Props<T> {
   title: string;
   description: string;
-  /** Base endpoint, e.g. /api/schools */
+  /** Base endpoint, e.g. /api/v1/schools */
   endpoint: string;
   /** Human singular name used in dialogs, e.g. "faculty". */
   singular: string;

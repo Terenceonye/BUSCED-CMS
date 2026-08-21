@@ -112,7 +112,7 @@ export default function ChangePasswordPage() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      await post("/api/auth/change-password", {
+      await post("/api/v1/auth/change-password", {
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
       });
