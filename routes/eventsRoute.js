@@ -33,7 +33,7 @@ router.put("/api/events/:id", protect, async (req, res) => {
     const updatedEvent = await Event.findByIdAndUpdate(
       id,
       { title, description, date, startTime, endTime, location },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedEvent) {
@@ -59,7 +59,7 @@ router.delete("/api/events/:id", protect, async (req, res) => {
 
 // Get all events or single by ?id=
 // GET all events with pagination or a single event by ?id=
-router.get("/api/events", async (req, res) => {
+router.get("/api/events", protect, async (req, res) => {
   try {
     const { id, page = 1, limit = 6 } = req.query;
 
@@ -86,7 +86,6 @@ router.get("/api/events", async (req, res) => {
   }
 });
 
-
 //=====================================================================
 //Public API to get all events
 //=====================================================================
@@ -97,7 +96,9 @@ router.get("/api/v1/events", async (req, res) => {
     if (id) {
       const event = await Event.findById(id);
       if (!event) {
-        return res.status(404).json({ success: false, message: "Event not found" });
+        return res
+          .status(404)
+          .json({ success: false, message: "Event not found" });
       }
       return res.json({ success: true, event });
     }
@@ -115,43 +116,11 @@ router.get("/api/v1/events", async (req, res) => {
     res.json({ success: true, events, total });
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to fetch events." + err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch events." + err.message,
+    });
   }
 });
-
-//For the Home page - brief events
-// router.get("/events-brief", async (req, res) => {
-//   try {
-//     const { id, page = 1, limit = 6 } = req.query;
-
-//     if (id) {
-//       const event = await Event.findById(id);
-//       if (!event) {
-//         return res.status(404).json({ message: "Event not found" });
-//       }
-//       return res.render("edit-event", { event });
-//     }
-
-//     const skip = (parseInt(page) - 1) * parseInt(limit);
-//     const today = new Date();
-
-//     const events = await Event.find({ date: { $gte: today } })
-//       .sort({ date: 1 }) // soonest first
-//       .skip(skip)
-//       .limit(parseInt(limit));
-
-//     const total = await Event.countDocuments({ date: { $gte: today } });
-
-//     res.json({ success: true, events, total });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Failed to fetch events." });
-//   }
-// });
 
 module.exports = router;
